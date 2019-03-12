@@ -3,6 +3,10 @@ const https = require('https')
 exports.handler = (event, context, callback) => {
   console.log('event.body', event.body)
   const options = {
+    hostname: 'circleci.com',
+    port: 443,
+    path:
+      '/api/v1.1/project/github/nearform/graphql-hooks/tree/netlify-trigger-circle',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -17,22 +21,18 @@ exports.handler = (event, context, callback) => {
     }
   })
 
-  const req = https.request(
-    'https://circleci.com/api/v1.1/project/github/nearform/graphql-hooks/tree/netlify-trigger-circle',
-    options,
-    res => {
-      console.log(`STATUS: ${res.statusCode}`)
-      console.log(`HEADERS: ${JSON.stringify(res.headers)}`)
-      res.setEncoding('utf8')
-      res.on('data', chunk => {
-        console.log(`BODY: ${chunk}`)
-      })
-      res.on('end', () => {
-        console.log('No more data in response.')
-        callback()
-      })
-    }
-  )
+  const req = https.request(options, res => {
+    console.log(`STATUS: ${res.statusCode}`)
+    console.log(`HEADERS: ${JSON.stringify(res.headers)}`)
+    res.setEncoding('utf8')
+    res.on('data', chunk => {
+      console.log(`BODY: ${chunk}`)
+    })
+    res.on('end', () => {
+      console.log('No more data in response.')
+      callback()
+    })
+  })
 
   req.on('error', e => {
     console.error(`problem with request: ${e.message}`)
