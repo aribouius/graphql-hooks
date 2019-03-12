@@ -1,6 +1,6 @@
 const https = require('https')
 
-exports.handler = (event, context, callback) => {
+exports.handler = function(event, context, callback) {
   console.log('event.body', event.body)
   const options = {
     hostname: 'circleci.com',
